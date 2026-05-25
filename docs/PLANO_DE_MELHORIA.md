@@ -400,6 +400,43 @@ Elevar o projeto de bom portfólio para portfólio forte de DevOps/Cloud.
 
 ---
 
+## Status da Refatoração (Resumo do que foi feito)
+
+### Itens concluídos nesta refatoração
+- Reescrita e sanitização do `README.md` com imagem de destaque.
+- Criação e organização da pasta `docs/` (incl. `RESUMO.md`, `STEP_BY_STEP.md`, `PIPELINE_PLAN.md`).
+- Adição de `terraform.tfvars.example` e `outputs.tf` no root para melhorar onboarding.
+- Parametrização de módulos Terraform (remoção de defaults sensíveis, `key_name`, `allowed_cidrs`).
+- Remoção do output que expunha `private_key_pem`; adição de `create_local_key_file` (opt-in).
+- Correção de nome de módulo (`ec2_sonarqube`) e limpeza de inconsistências.
+- Adição de `Jenkinsfile` de exemplo e padronização de scripts em `data/` (`data_*.sh`).
+- Inclusão de workflow GitHub Actions para validações (`fmt`, `init -backend=false`, `validate`, `tflint`).
+- Adição de imagens (`img/pipeline.webp`, `img/Copilot_20260524_205122.png`) e referência nos docs.
+- Preparação de `pr_body.md` e trabalho em branch `improve/readme-tfvars-outputs` (commits aplicados e push realizados).
+
+### Resultado imediato
+- Repositório pronto para demonstração em portfólio com documentação organizada, imagens e validações automáticas adicionadas. A maior parte da refatoração estrutural foi concluída.
+
+## Melhorias Futuras (pendências recomendadas)
+
+- Rodar validações Terraform localmente e corrigir quaisquer divergências (`terraform fmt`, `terraform validate`, `tflint`).
+- Varredura final por segredos e remoção de vestígios (`git grep` para chaves, tokens, outputs sensíveis).
+- Decidir e finalizar o tratamento do módulo GitLab (ativar ou documentar como escopo futuro).
+- Adicionar `LICENSE` (ex.: MIT) e `CONTRIBUTING.md` para tornar o repositório pronto para público.
+- Incluir etapas específicas de build/test para projetos Go no `Jenkinsfile` (ex.: `go test`, `golangci-lint`, `go vet`) ou prover `Makefile`/scripts de exemplo.
+- Adicionar screenshots detalhados do passo a passo em `img/` (usar orientação já adicionada em `STEP_BY_STEP.md`).
+- Reforçar regras de segurança: reduzir `allowed_cidrs`, aplicar regras mínimas em security groups e documentar diferenças entre laboratório e produção.
+- Considerar pre-commit hooks (ex.: `pre-commit`), checkov para segurança, e políticas de validação mais rígidas em CI.
+- Opcional: incluir estimativa de custo, DNS/HTTPS com Load Balancer, e automações para deploy seguro.
+
+## Estado atual
+
+Refatoração: CONCLUÍDA (por ora). O repositório está em estado apresentável para portfólio; as melhorias futuras listadas acima são recomendações para aumentar a robustez, segurança e profissionalismo do projeto.
+
+---
+
+---
+
 ## 20. Resultado final esperado
 Ao concluir essas melhorias, o repositório poderá ser apresentado como um projeto que demonstra:
 

@@ -5,6 +5,12 @@ Aqui está o passo a passo enxuto e atualizado para instalação e configuraçã
 
 Guia prático para instalar Jenkins, SonarQube e GitLab em instâncias EC2 provisionadas via Terraform. Este documento foca em passos claros, idempotentes e checagens pós-instalação.
 
+<p align="center">
+	<img src="../img/pipeline.webp" alt="Pipeline overview" width="700" />
+</p>
+
+**Figura:** Visão geral da pipeline (fluxo de CI/CD com Jenkins, GitLab e SonarQube).
+
 ## Sumário
 - [Pré-requisitos](#pre-requisitos)
 - [Placeholders comuns](#placeholders-comuns)
@@ -135,6 +141,13 @@ Após a instalação, verifique a página web `http://<GITLAB_PUBLIC_IP>` e regi
 ## Referências e scripts
 - Scripts de provisionamento e user-data estão em `data/` (ex.: `data/data_jenkins.sh`, `data/data_sonarqube.sh`, `data/data_gitlab.sh`).
 - Links oficiais: Jenkins, SonarQube, GitLab docs.
+
+Nota sobre prints: se você adicionar screenshots do passo a passo em `img/`, use nomes descritivos como `step-01-setup.png`, `step-02-jenkins.png` e referencie-os nas seções correspondentes com a marcação abaixo:
+
+```html
+<p align="center"><img src="../img/step-01-setup.png" alt="Passo 1" width="700" /></p>
+**Figura:** Passo 1 — verificar pré-requisitos.
+```
 
 
 ##### Acessar a URL http//:Ip_public:8080

@@ -1,3 +1,16 @@
+variable "instance_name" {
+        description = "Name of the instance to be created"
+        default = "my-ec2-instance"
+}
+
+variable "instance_type" {
+        default = "t2.micro"
+}
+
+variable "subnet_id" {
+        description = "The VPC subnet the instance(s) will be created in"
+        default = "subnet-07ebbe60"
+}
 
 
 variable "instance_name" {
@@ -31,40 +44,14 @@ variable "key_name" {
         type        = string
         description = "Name of the existing EC2 key pair to use for SSH access (no default — provide via tfvars)"
 }
-
-# colect date  from AWS AMI 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
   owners = ["099720109477"] # Canonical
 }
-
-
-
-/*variable "tcb_blog_vpc_id" {
-  default = "vpc-044a05c74d46127b6" # Orientações para copia da VPC ID abaixo.
-}
-
-variable "tcb_blog_subnet_public_id" {
-  default = "subnet-0f001d93c9e954103" # Orientações para copia da Subnet ID abaixo.
-}*/
 
 variable "vpc_id" {}
 variable "subnet_ids" {}
 
 variable "allowed_cidrs" {
-        type        = list(string)
-        description = "List of CIDR blocks allowed to access instances (default allows all for lab use). Override for production."
-        default     = ["0.0.0.0/0"]
+  type        = list(string)
+  description = "List of CIDR blocks allowed to access instances (default allows all for lab use). Override for production."
+  default     = ["0.0.0.0/0"]
 }
-

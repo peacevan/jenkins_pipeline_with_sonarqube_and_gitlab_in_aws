@@ -1,286 +1,99 @@
 # jenkins_pipeline_with_sonarqube_and_gitlab_in_aws
-criação de um pipeline completo  com jeankins sonarqube gitlab  na aws com  terraform 
+Pipeline CI/CD para projetos em Go (Golang) com infraestrutura provisionada por Terraform na AWS — integração com Jenkins, SonarQube e GitLab.
+
+<p align="center">
+	<img src="img/Copilot_20260524_205122.png" alt="Architecture diagram (Copilot)" width="800" />
+</p>
+
+<p align="center">
+	<img src="img/pipeline.webp" alt="Pipeline overview" width="800" />
+</p>
+
+## Tutorial detalhado (Medium)
+
+Para o passo a passo completo, com prints e explicações detalhadas, veja o artigo no Medium:
+
+https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
 
 
-## Passo a passo
+Resumo executivo / objetivo
+--------------------------
+Fornecer um repositório demonstrativo que combina Terraform para provisionamento em AWS e uma pipeline de CI/CD que valida, testa e analisa código de um projeto em Go, servindo como material para portfólio e referência técnica.
 
-### 1. INSTALAÇÃO DO JENKINS
+Arquitetura da solução
+----------------------
+A solução provisiona os componentes principais em AWS: uma VPC com subnets, instâncias EC2 para Jenkins, SonarQube e GitLab (opcional), security groups e um key pair para acesso seguro. O Jenkins orquestra o fluxo de build/test/scan; SonarQube realiza análise estática e o GitLab funciona como repositório/trigger.
 
-- **IP ATUAL**: http://3.231.55.218/
-- **IP DA INSTÂNCIA DO JENKINS**: Coloque o IP aqui
+Stack utilizada
+---------------
+- Terraform
+- AWS (EC2, VPC, SG, KeyPair)
+- Jenkins
+- SonarQube
+- GitLab
+- Go (Golang)
 
-#### 1.1 - Acessar a instância EC2 do Jenkins
+Recursos provisionados na AWS
+-----------------------------
+- VPC com subnets públicas/privadas
+- Internet Gateway e rotas
+- Security Groups (Jenkins, SonarQube, GitLab)
+- EC2 instances para cada serviço
+- Key Pair (módulo dedicado)
+- Outputs principais (IP, IDs) via `outputs.tf`
 
-```sh
-ssh -i sshkey-key.pem ubuntu@3.231.55.218
+Fluxo do pipeline CI/CD
+-----------------------
+1. Commit/push no repositório aciona o pipeline.
+2. Jenkins: checkout → `go build` → `go test` → `golangci-lint` → `sonar-scanner`.
+3. Em caso de sucesso, artefatos ou deploys são executados conforme configuração (opcional).
+
+Estrutura do repositório
+------------------------
+- `modules/` — módulos Terraform (ec2, vpc, key_pair, etc.)
+- `data/` — scripts de provisionamento e helpers
+- `docs/` — documentação e planos
+- `img/` — diagramas e evidências (screenshots)
+- `Jenkinsfile` — pipeline de exemplo
+- `terraform.tfvars.example` — modelo de variáveis
+- `.github/workflows/terraform.yml` — validações de IaC
+
+Como executar
+-------------
+1. Copie e edite variáveis:
+
+```bash
+cp terraform.tfvars.example terraform.tfvars
+# edite terraform.tfvars com valores (subnets, ami_id, key_name, allowed_cidrs)
 ```
 
-#### 1.2 - Definir o nome do host
+2. Valide e gere plano:
 
-```sh
-sudo hostnamectl set-hostname jenkins
-/bin/bash
+```bash
+terraform fmt
+terraform init -input=false -backend=false
+terraform validate
+terraform plan -out=tfplan -input=false
 ```
 
-#### 1.3 - Atualizar o Linux
+3. Aplique quando pronto:
 
-```sh
-sudo apt update
+```bash
+terraform apply tfplan
 ```
 
-#### 1.4 - Instalar o Java
-
-```sh
-sudo apt install openjdk-11-jre
-sudo apt-get install openjdk-17-jdk -y
-```
-
-#### 1.5 - Instalar o Jenkins
-
-##### 1.5.1 - Adicionar repositório do Jenkins
-
-```sh
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-```
-
-##### 1.5.2 - Instalação do Jenkins
-
-```sh
-sudo apt-get update
-sudo apt-get install jenkins
-systemctl status jenkins
-```
-
-##### 1.5.3 - Acessar a URL http//:Ip_public:8080
-
-Coloque a URL da tela do Jenkins aqui
-------------------------------------------
-
-### 2. INSTALAÇÃO DO SONARQUBE
-
-Coloque os pré-requisitos aqui
-
-#### 2.1 - Acessar a instância do SonarQube
-
-```sh
-ssh -i sshkey-key.pem ubuntu@3.220.205.103
-sudo hostnamectl set-hostname sonarquber
-```
-
-#### 2.2 - Aumentar o vm.max_map_count kernal, file descriptor e ulimit para a sessão atual em tempo de execução.
-
-```sh
-sysctl -w vm.max_map_count=524288
-sysctl -w fs.file-max=131072
-ulimit -n 131072
-ulimit -u 8192
-```
-
-#### 2.3 - Instalação do PostgreSQL
-
-```sh
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get -y install postgresql postgresql-contrib
-sudo netstat -tunlp | grep 5432
-sudo service postgresql96 initdb
-sudo systemctl start postgresql
-systemctl is-active postgresql
-sudo -u postgres psql
-```
-
-#### 2.4 - Instalação do Sonarqube
-
-#### 2.4.1 - Entrar na pasta temporária
-
-```sh
-cd /tmp
-```
-
-#### 2.4.2 - Baixar o Zip do SonarQube na pasta temporária
-
-```sh
-sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip
-```
-
-#### 2.4.3 - Instalar Unzip
-
-```sh
-sudo apt-get install unzip
-```
-
-#### 2.4.4 - Descompactar o arquivo de instalação para o diretório /opt
-
-```sh
-sudo unzip sonarqube-9.9.0.65466.zip -d /opt
-```
-
-#### 2.4.5 - Configurar SonarQube no Ubuntu 22.04 LTS
-
-#### 2.4.5.1 - Criar um grupo chamado sonar
-
-```sh
-sudo groupadd sonar
-```
-
-#### 2.4.5.2 - Adicionar o usuário com acesso ao diretório
-
-```sh
-sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar 
-sudo chown sonar:sonar /opt/sonarqube -R
-```
-
-### [Continuação...]
-
-#### 2.4.5.3 - Abrir o arquivo de configuração do SonarQube usando seu editor de texto favorito.
-
-```sh
-sudo nano /opt/sonarqube/conf/sonar.properties
-```
-
-```properties
-# Configurações do banco de dados PostgreSQL
-sonar.jdbc.username=sonar
-sonar.jdbc.password=sonar
-sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
-```
-
-#### 2.4.5.4 - Editar o arquivo de script do Sonar e definir RUN_AS_USER
-
-```sh
-sudo nano /opt/sonarqube/bin/linux-x86-64/sonar.sh
-```
-
-```sh
-RUN_AS_USER=sonar
-```
-
-#### 2.4.5.5 - Iniciar o SonarQube
-
-```sh
-sudo su sonar
-cd /opt/sonarqube/bin/linux-x86-64/
-./sonar.sh start
-```
-
-#### 2.4.5.6 - Configurar o serviço systemd
-
-```sh
-sudo nano /etc/systemd/system/sonar.service
-```
-
-Adicione as seguintes linhas:
-
-```plaintext
-[Unit]
-Description=Serviço do SonarQube
-After=syslog.target network.target
-
-[Service]
-Type=forking
-
-ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
-ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
-
-User=sonar
-Group=sonar
-Restart=always
-
-LimitNOFILE=65536
-LimitNPROC=4096
-
-[Install]
-WantedBy=multi-user.target
-```
-
-#### 2.4.5.7 - Salvar e fechar o arquivo. Em seguida, pare o script do SonarQube que iniciamos manualmente e execute-o como um daemon.
-
-```sh
-sudo systemctl start sonar
-```
-
-#### 2.4.5.8 - Habilitar o serviço do SonarQube para iniciar automaticamente na inicialização do sistema.
-
-```sh
-sudo systemctl enable sonar
-```
-
-#### 2.4.5.9 - Verificar se o serviço do SonarQube está em execução.
-
-```sh
-sudo systemctl status sonar
-```
-
-### ERROS NA INSTALAÇÃO DO SONARQUBE
-
-- **Erro: Failed to create table schema_migrations**
-
-  Solução:
-  
-  ```sql
-  ALTER USER sonar SET search_path to sonarqube;
-  GRANT ALL ON SCHEMA sonarqube TO sonarqube;
-  GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonar; -- Não saia do shell psql
-  ```
-
-- **Erro: Cannot assign requested address**
-
-  Usuário e senha do PostgreSQL:
-  - Usuário: sonar
-  - Senha: sonar
-  - Porta: 3485
-
-------------------------------------------------------
-
-### 3. INSTALAÇÃO DO GITLAB NO UBUNTU 22.04
-
-- **IP**: 3.231.25.225
-
-#### 3.1 - Atualizar os pacotes do sistema
-
-```sh
-sudo apt update
-sudo apt upgrade -y
-sudo reboot
-```
-
-#### 3.2 - Instalar dependências do GitLab
-
-```sh
-sudo apt install -y curl openssh-server ca-certificates postfix
-```
-
-Durante a instalação do postfix, selecione "Site da Internet" e insira o nome do host do seu servidor como nome do servidor de e-mail.
-
-#### 3.3 - Adicionar o repositório do GitLab Apt
-
-```sh
-curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
-```
-
-#### 3.4 - Instalação do GitLab no Ubuntu 22.04
-
-```sh
-sudo EXTERNAL_URL="http://gitlab.linuxtechi.net" apt install gitlab-ce
-```
-
-A senha de usuário da interface web do GitLab é armazenada em "/etc/gitlab/initial_root_password".
-
-#### 3.5 - Liberar portas no firewall
-
-```sh
-sudo ufw allow http
-sudo ufw allow https
-```
-
-Após instalar e configurar o GitLab, abra seu navegador e acesse o endereço IP ou nome do host do seu servidor.
-
-Fontes:
-- [Computing for Geeks](https://computingforgeeks.com/how-to-install-gitlab-ce-on-ubuntu-linux/)
-- [FossLinux](https://www.fosslinux.com/24961/configuring-jenkins-pipeline-with-sonarqube-and-gitlab-integration.htm)
-- [GCore](https://gcore.com/learning/jenkins-pipeline-with-sonarqube-and-gitlab/)
-
+Melhorias futuras
+-----------------
+- Finalizar ou refatorar o módulo GitLab.
+- Adicionar `LICENSE` e `CONTRIBUTING.md`.
+- Reforçar segurança (reduzir `allowed_cidrs`, políticas de IAM).
+- Adicionar pre-commit hooks e segurança adicional (Checkov, tflint).
+- Incluir mais evidências visuais e instruções detalhadas de build para Go.
+
+Screenshots / evidências
+------------------------
+Imagens e diagramas estão em `img/` e são referenciadas em `docs/STEP_BY_STEP.md`.
+
+Contribuição
+------------
+Abra PRs a partir de branches `improve/*` para sugestões e melhorias. Use `pr_body.md` como modelo para PRs.

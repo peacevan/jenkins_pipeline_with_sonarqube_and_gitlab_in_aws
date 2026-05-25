@@ -1,13 +1,32 @@
-# Plano de Melhoria do Repositório
+# Plano de Melhoria
+
+## Sumário
+- [Objetivo](#objetivo)
+- [Reposicionamento do Projeto para Portfólio](#reposicionamento-do-projeto-para-portf%C3%B3lio)
+- [Reescrever o README de Forma Profissional](#reescrever-o-readme-de-forma-profissional)
+- [Remover Dados Sensíveis e Informações de Ambiente Real](#remover-dados-sens%C3%ADveis-e-informa%C3%A7%C3%B5es-de-ambiente-real)
+- [Fortalecer Práticas de Segurança](#fortalecer-pr%C3%A1ticas-de-seguran%C3%A7a)
+- [Parametrizar Melhor o Terraform](#parametrizar-melhor-o-terraform)
+- [Padronizar Nomenclatura e Corrigir Inconsistências](#padronizar-nomenclatura-e-corrigir-inconsist%C3%AAncias)
+- [Limpar Código Comentado e Trechos Inacabados](#limpar-c%C3%B3digo-comentado-e-trechos-inacabados)
+- [Finalizar ou Reestruturar o Módulo GitLab](#finalizar-ou-reestruturar-o-m%C3%B3dulo-gitlab)
+- [Criar outputs.tf e Melhorar Experiência de Uso](#criar-outputstf-e-melhorar-experi%C3%AAncia-de-uso)
+- [Adicionar terraform.tfvars.example](#adicionar-terraformtfvarsexample)
+- [Organizar Estrutura dos Arquivos Terraform](#organizar-estrutura-dos-arquivos-terraform)
+- [Validar e Padronizar Qualidade do Código Terraform](#validar-e-padronizar-qualidade-do-c%C3%B3digo-terraform)
+- [Melhorar Evidências Visuais do Projeto](#melhorar-evid%C3%AAncias-visuais-do-projeto)
+- [Criar Narrativa de Impacto para LinkedIn](#criar-narrativa-de-impacto-para-linkedin)
+- [Plano de Execução por Fases](#plano-de-execu%C3%A7%C3%A3o-por-fases)
+- [Conclusão](#conclus%C3%A3o)
 
 ## Objetivo
 Transformar este repositório de um projeto com perfil de laboratório/estudo em um **case de portfólio profissional** para destacar competências em **DevOps, CI/CD, Infraestrutura como Código e AWS** no LinkedIn.
 
 ---
 
-## 1. Reposicionamento do projeto para portfólio
+## Reposicionamento do Projeto para Portfólio
 
-### Situação atual
+### Situação Atual
 O repositório já demonstra conhecimento prático em:
 - Terraform
 - AWS
@@ -26,15 +45,15 @@ Reposicionar o projeto como:
 
 ---
 
-## 2. Reescrever o README de forma profissional
+## Reescrever o README de Forma Profissional
 
-### Problemas identificados
+### Problemas Identificados
 - README muito operacional e pouco executivo
 - presença de placeholders como “coloque o IP aqui”
 - foco excessivo em comandos manuais
 - pouca ênfase em arquitetura, objetivos e resultados
 
-### Melhorias propostas
+### Melhorias Propostas
 Criar um README com a seguinte estrutura:
 
 1. **Título do projeto**
@@ -49,20 +68,20 @@ Criar um README com a seguinte estrutura:
 10. **Screenshots / evidências**
 11. **Resultados obtidos**
 
-### Resultado esperado
+### Resultado Esperado
 Melhorar a leitura para recrutadores, gestores técnicos e profissionais de tecnologia que acessarem o projeto.
 
 ---
 
-## 3. Remover dados sensíveis e informações de ambiente real
+## Remover Dados Sensíveis e Informações de Ambiente Real
 
-### Problemas identificados
+### Problemas Identificados
 - exposição de IPs públicos reais no README
 - comandos de acesso SSH apontando para ambiente real
 - nomes específicos de infraestrutura que podem estar ligados ao ambiente pessoal
 - exemplos com credenciais fixas
 
-### Melhorias propostas
+### Melhorias Propostas
 Remover ou substituir por placeholders:
 - `<JENKINS_PUBLIC_IP>`
 - `<SONARQUBE_URL>`
@@ -76,7 +95,7 @@ Também remover do material público:
 - nomes de buckets de uso pessoal, quando aplicável
 - exemplos de usuário/senha reais ou inseguros
 
-### Resultado esperado
+### Resultado Esperado
 Projeto com aparência mais profissional, segura e reutilizável.
 
 ---
@@ -133,7 +152,7 @@ Código mais limpo, reutilizável e aderente a boas práticas de IaC.
 
 ### Problemas identificados
 - nomes inconsistentes entre módulos e recursos
-- possível typo em nomes como `sonarquber`
+- possível typo em nomes como `sonarqube`
 - presença de comentários antigos ou blocos desativados
 
 ### Melhorias propostas
@@ -381,6 +400,43 @@ Elevar o projeto de bom portfólio para portfólio forte de DevOps/Cloud.
 
 ---
 
+## Status da Refatoração (Resumo do que foi feito)
+
+### Itens concluídos nesta refatoração
+- Reescrita e sanitização do `README.md` com imagem de destaque.
+- Criação e organização da pasta `docs/` (incl. `RESUMO.md`, `STEP_BY_STEP.md`, `PIPELINE_PLAN.md`).
+- Adição de `terraform.tfvars.example` e `outputs.tf` no root para melhorar onboarding.
+- Parametrização de módulos Terraform (remoção de defaults sensíveis, `key_name`, `allowed_cidrs`).
+- Remoção do output que expunha `private_key_pem`; adição de `create_local_key_file` (opt-in).
+- Correção de nome de módulo (`ec2_sonarqube`) e limpeza de inconsistências.
+- Adição de `Jenkinsfile` de exemplo e padronização de scripts em `data/` (`data_*.sh`).
+- Inclusão de workflow GitHub Actions para validações (`fmt`, `init -backend=false`, `validate`, `tflint`).
+- Adição de imagens (`img/pipeline.webp`, `img/Copilot_20260524_205122.png`) e referência nos docs.
+- Preparação de `pr_body.md` e trabalho em branch `improve/readme-tfvars-outputs` (commits aplicados e push realizados).
+
+### Resultado imediato
+- Repositório pronto para demonstração em portfólio com documentação organizada, imagens e validações automáticas adicionadas. A maior parte da refatoração estrutural foi concluída.
+
+## Melhorias Futuras (pendências recomendadas)
+
+- Rodar validações Terraform localmente e corrigir quaisquer divergências (`terraform fmt`, `terraform validate`, `tflint`).
+- Varredura final por segredos e remoção de vestígios (`git grep` para chaves, tokens, outputs sensíveis).
+- Decidir e finalizar o tratamento do módulo GitLab (ativar ou documentar como escopo futuro).
+- Adicionar `LICENSE` (ex.: MIT) e `CONTRIBUTING.md` para tornar o repositório pronto para público.
+- Incluir etapas específicas de build/test para projetos Go no `Jenkinsfile` (ex.: `go test`, `golangci-lint`, `go vet`) ou prover `Makefile`/scripts de exemplo.
+- Adicionar screenshots detalhados do passo a passo em `img/` (usar orientação já adicionada em `STEP_BY_STEP.md`).
+- Reforçar regras de segurança: reduzir `allowed_cidrs`, aplicar regras mínimas em security groups e documentar diferenças entre laboratório e produção.
+- Considerar pre-commit hooks (ex.: `pre-commit`), checkov para segurança, e políticas de validação mais rígidas em CI.
+- Opcional: incluir estimativa de custo, DNS/HTTPS com Load Balancer, e automações para deploy seguro.
+
+## Estado atual
+
+Refatoração: CONCLUÍDA (por ora). O repositório está em estado apresentável para portfólio; as melhorias futuras listadas acima são recomendações para aumentar a robustez, segurança e profissionalismo do projeto.
+
+---
+
+---
+
 ## 20. Resultado final esperado
 Ao concluir essas melhorias, o repositório poderá ser apresentado como um projeto que demonstra:
 
@@ -398,3 +454,7 @@ Ao concluir essas melhorias, o repositório poderá ser apresentado como um proj
 Este repositório já tem uma base técnica interessante. O principal trabalho agora não é apenas “fazer funcionar”, mas sim **refinar, organizar, proteger e apresentar melhor**.
 
 Com essas melhorias, o projeto terá mais valor como prova pública de competência técnica e poderá ser usado com muito mais força no LinkedIn, GitHub e em processos seletivos.
+
+--
+
+Veja o arquivo original na raiz antes da reorganização para histórico. Este documento descreve o plano de melhorias sugerido para transformar o repositório em um case de portfólio profissional. Mantido em `docs/` para organização e navegação.

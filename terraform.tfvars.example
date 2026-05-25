@@ -1,0 +1,12 @@
+/* Exemplo de terraform.tfvars (NÃO inclui dados reais)
+Substitua os placeholders com valores apropriados antes de executar o Terraform.
+*/
+
+prefix = "jornada"
+namespace = "dev"
+key_name = "<KEY_PAIR_NAME>"
+aws_region = "<AWS_REGION>"
+vpc_cidr_block = "10.0.0.0/16"
+jenkins_instance_type = "t3.medium"
+sonarqube_instance_type = "t3.medium"
+gitlab_instance_type = "t3.medium"

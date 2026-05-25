@@ -9,6 +9,13 @@ Pipeline CI/CD para projetos em Go (Golang) com infraestrutura provisionada por 
 	<img src="img/pipeline.webp" alt="Pipeline overview" width="800" />
 </p>
 
+## Tutorial detalhado (Medium)
+
+Para o passo a passo completo, com prints e explicações detalhadas, veja o artigo no Medium:
+
+https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
+
+
 Resumo executivo / objetivo
 --------------------------
 Fornecer um repositório demonstrativo que combina Terraform para provisionamento em AWS e uma pipeline de CI/CD que valida, testa e analisa código de um projeto em Go, servindo como material para portfólio e referência técnica.

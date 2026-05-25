@@ -1,6 +1,14 @@
 # jenkins_pipeline_with_sonarqube_and_gitlab_in_aws
 Criação de um pipeline completo com Jenkins, SonarQube e GitLab na AWS usando Terraform.
 
+<p align="center">
+	<img src="img/Copilot_20260524_205122.png" alt="Architecture diagram (Copilot)" width="800" />
+</p>
+
+<p align="center">
+  <img src="img/pipeline.webp" alt="Pipeline overview" width="800" />
+</p>
+
 Resumo
 ------
 Projeto demonstrando automação DevOps na AWS com infraestrutura provisionada por Terraform e integração CI/CD via Jenkins, análise de qualidade com SonarQube e repositório de código GitLab.

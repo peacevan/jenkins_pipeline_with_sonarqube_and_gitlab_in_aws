@@ -10,13 +10,12 @@ variable "instance_type" {
 }
 
 variable "subnet_id" {
-        description = "The VPC subnet the instance(s) will be created in"
-        default = "subnet-07ebbe60"
+  description = "The VPC subnet the instance(s) will be created in"
 }
 
 variable "ami_id" {
-        description = "The AMI to use"
-        default = "ami-09d56f8956ab235b3"
+  description = "The AMI to use (leave empty to use module default lookup)"
+  default     = ""
 }
 
 variable "number_of_instances" {
@@ -26,7 +25,7 @@ variable "number_of_instances" {
 
 
 variable "ami_key_pair_name" {
-        default = "my_terrafor init ec2"
+        default = ""
 }
 
 variable "key_name" {

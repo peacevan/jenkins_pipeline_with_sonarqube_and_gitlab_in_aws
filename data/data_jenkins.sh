@@ -1,3 +1,32 @@
+# Standardized helper for CI/local Terraform checks (idempotent)
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[data/data_jenkins.sh] Starting terraform checks"
+
+command -v terraform >/dev/null 2>&1 || { echo "terraform not found in PATH"; exit 1; }
+
+echo "Running terraform fmt (check)"
+terraform fmt -check -diff || echo "terraform fmt found differences"
+
+echo "Initializing Terraform (no remote backend)"
+terraform init -input=false -backend=false
+
+echo "Validating Terraform configuration"
+terraform validate
+
+if command -v tflint >/dev/null 2>&1; then
+	echo "Running tflint"
+	tflint || true
+else
+	echo "tflint not installed - skipping"
+fi
+
+echo "Creating execution plan"
+terraform plan -out=tfplan -input=false
+echo "Plan saved to tfplan"
+
+echo "Done. Review tfplan or run 'terraform apply tfplan' locally when ready."
 #!/bin/bash
 
 # Definindo um nome para o host

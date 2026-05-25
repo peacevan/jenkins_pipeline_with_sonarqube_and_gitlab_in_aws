@@ -1,5 +1,3 @@
-
-
 variable "instance_name" {
         description = "Name of the instance to be created"
         default = "my-ec2-instance"
@@ -24,16 +22,16 @@ variable "number_of_instances" {
         default = 1
 }
 
-
 variable "ami_key_pair_name" {
         default = "my_terrafor init ec2"
 }
 
 variable "key_name" {
-        default = "mykey"
+        type        = string
+        description = "Name of the existing EC2 key pair to use for SSH access (no default — provide via tfvars)"
 }
 
-# colect date  from AWS AMI 
+# collect data from AWS AMI 
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -50,16 +48,11 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-
-
-/*variable "tcb_blog_vpc_id" {
-  default = "vpc-044a05c74d46127b6" # Orientações para copia da VPC ID abaixo.
-}
-
-variable "tcb_blog_subnet_public_id" {
-  default = "subnet-0f001d93c9e954103" # Orientações para copia da Subnet ID abaixo.
-}*/
-
 variable "vpc_id" {}
 variable "subnet_ids" {}
 
+variable "allowed_cidrs" {
+  type        = list(string)
+  description = "List of CIDR blocks allowed to access instances (default allows all for lab use). Override for production."
+  default     = ["0.0.0.0/0"]
+}

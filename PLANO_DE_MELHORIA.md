@@ -133,7 +133,7 @@ Código mais limpo, reutilizável e aderente a boas práticas de IaC.
 
 ### Problemas identificados
 - nomes inconsistentes entre módulos e recursos
-- possível typo em nomes como `sonarquber`
+- possível typo em nomes como `sonarqube`
 - presença de comentários antigos ou blocos desativados
 
 ### Melhorias propostas

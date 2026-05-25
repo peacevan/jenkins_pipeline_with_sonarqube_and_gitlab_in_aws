@@ -1,9 +1,10 @@
 RESUMO 
 
 -INSTALAÇÃO JEANKINS
- IP ATUAL http://3.231.55.218/
- IP DA INSTANCIA JENKINS 
- ssh -i sshkey-key.pem ubuntu@3.231.55.218
+ JENKINS_URL: <JENKINS_URL>
+ IP DA INSTANCIA JENKINS: <JENKINS_PUBLIC_IP>
+ Exemplo de conexão SSH:
+ ssh -i <KEY_PAIR_FILE>.pem ubuntu@<JENKINS_PUBLIC_IP>
 
 //nome do host
 sudo hostnamectl set-hostname jenkins
@@ -23,11 +24,11 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins
  acessar a url http//:Ip_public:8080
  OK 
  ------------------------------------------
- INSTALAÇÃO DO SONARQUBER 
-   
-  #acessar a instancia 
-     sudo hostnamectl set-hostname sonarquber
-     ssh -i sshkey-key.pem ubuntu@3.220.205.103
+ INSTALAÇÃO DO SONARQUBE
+
+# Acessar a instância (exemplo)
+sudo hostnamectl set-hostname sonarqube
+ssh -i <KEY_PAIR_FILE>.pem ubuntu@<SONARQUBE_PUBLIC_IP>
  #Increase the vm.max_map_count kernal ,file discriptor and ulimit for current session at runtime.
   Note: MySQL Support for SonarQube is depricated. 
 
@@ -65,7 +66,7 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins
 
          Alterar senha do usuário padrão do PostgreSQL
          sudo passwd postgres
-         3485
+         <POSTGRES_PORT>
          logar como usuário do postigres 
          su - postgres
          entrar no chell do postigres 
@@ -74,10 +75,10 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins
         criar um usuario e banco sonar 
        
         --
-        createuser sonar
-        ALTER USER sonar WITH ENCRYPTED password 'sonar';
-        ou
-        CREATE USER sonar WITH ENCRYPTED PASSWORD 'sonar_password';(opcional)
+      createuser <SONAR_DB_USER>
+      ALTER USER <SONAR_DB_USER> WITH ENCRYPTED password '<SONAR_DB_PASSWORD>';
+      ou
+      CREATE USER <SONAR_DB_USER> WITH ENCRYPTED PASSWORD '<SONAR_DB_PASSWORD>';(opcional)
         ---
         criar banco de dados 
         CREATE DATABASE sonarqube;
@@ -108,13 +109,13 @@ Switch to the postgres user.
 su - postgres
 Create a new user by typing:
 
-createuser sonar
+createuser <SONAR_DB_USER>
 Switch to the PostgreSQL shell.
 
 psql
 Set a password for the newly created user for SonarQube database.
 
-ALTER USER sonar WITH ENCRYPTED password 'sonar';
+ALTER USER <SONAR_DB_USER> WITH ENCRYPTED password '<SONAR_DB_PASSWORD>';
 
 -Create a new database for PostgreSQL database by running:
  CREATE DATABASE sonarqube OWNER sonar;
@@ -129,7 +130,7 @@ Switch back to the sudo user by running the exit command.
 exit
 
 
- INSTALAR O SONARQUBER
+ INSTALAR O SONARQUBE
 
  
  entrar na pasta temporária 
@@ -164,9 +165,9 @@ exit
     ````
     sudo nano /opt/sonarqube/conf/sonar.properties
     colocar  login e senha e a estring de conexão do postigres
-    sonar.jdbc.username=sonar
-    sonar.jdbc.password=sonar
-    sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+   sonar.jdbc.username=<SONAR_DB_USER>
+   sonar.jdbc.password=<SONAR_DB_PASSWORD>
+   sonar.jdbc.url=jdbc:postgresql://localhost:5432/<SONAR_DB_NAME>
     ````
 
     #Edit the sonar script file and set RUN_AS_USER

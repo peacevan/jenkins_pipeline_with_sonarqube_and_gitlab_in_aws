@@ -30,7 +30,8 @@ variable "ami_key_pair_name" {
 }
 
 variable "key_name" {
-        default = "mykey"
+        type        = string
+        description = "Name of the existing EC2 key pair to use for SSH access (no default — provide via tfvars)"
 }
 
 # colect date  from AWS AMI 
@@ -62,4 +63,10 @@ variable "tcb_blog_subnet_public_id" {
 
 variable "vpc_id" {}
 variable "subnet_ids" {}
+
+variable "allowed_cidrs" {
+        type        = list(string)
+        description = "List of CIDR blocks allowed to access instances (default allows all for lab use). Override for production."
+        default     = ["0.0.0.0/0"]
+}
 

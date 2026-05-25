@@ -4,13 +4,14 @@ Aqui está o README padronizado:
 
 ### 1. INSTALAÇÃO DO JENKINS
 
-- **IP ATUAL**: http://3.231.55.218/
-- **IP DA INSTÂNCIA DO JENKINS**: Coloque o IP aqui
+-- **JENKINS_URL**: <JENKINS_URL>
+-- **IP DA INSTÂNCIA DO JENKINS**: <JENKINS_PUBLIC_IP>
 
 #### 1.1 - Acessar a instância EC2 do Jenkins
 
 ```sh
-ssh -i sshkey-key.pem ubuntu@3.231.55.218
+# use sua chave e o IP público substitua os placeholders abaixo
+ssh -i <KEY_PAIR_FILE>.pem ubuntu@<JENKINS_PUBLIC_IP>
 ```
 
 #### 1.2 - Definir o nome do host
@@ -63,8 +64,9 @@ Coloque os pré-requisitos aqui
 #### 2.1 - Acessar a instância do SonarQube
 
 ```sh
-ssh -i sshkey-key.pem ubuntu@3.220.205.103
-sudo hostnamectl set-hostname sonarquber
+# use sua chave e o IP público do SonarQube
+ssh -i <KEY_PAIR_FILE>.pem ubuntu@<SONARQUBE_PUBLIC_IP>
+sudo hostnamectl set-hostname sonarqube
 ```
 
 #### 2.2 - Aumentar o vm.max_map_count kernal, file descriptor e ulimit para a sessão atual em tempo de execução.
@@ -141,10 +143,10 @@ sudo nano /opt/sonarqube/conf/sonar.properties
 ```
 
 ```properties
-# Configurações do banco de dados PostgreSQL
-sonar.jdbc.username=sonar
-sonar.jdbc.password=sonar
-sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+# Configurações do banco de dados PostgreSQL (use variáveis/segredos, não valores fixos)
+sonar.jdbc.username=<SONAR_DB_USER>
+sonar.jdbc.password=<SONAR_DB_PASSWORD>
+sonar.jdbc.url=jdbc:postgresql://localhost:<POSTGRES_PORT>/<SONAR_DB_NAME>
 ```
 
 #### 2.4.5.4 - Editar o arquivo de script do Sonar e definir RUN_AS_USER
@@ -227,16 +229,16 @@ sudo systemctl status sonar
 
 - **Erro: Cannot assign requested address**
 
-  Usuário e senha do PostgreSQL:
-  - Usuário: sonar
-  - Senha: sonar
-  - Porta: 3485
+  Usuário e senha do PostgreSQL (exemplo — não use valores reais no repositório):
+  - Usuário: <SONAR_DB_USER>
+  - Senha: <SONAR_DB_PASSWORD>
+  - Porta: <POSTGRES_PORT>
 
 ------------------------------------------------------
 
 ### 3. INSTALAÇÃO DO GITLAB NO UBUNTU 22.04
 
-- **IP**: 3.231.25.225
+-- **GITLAB_URL**: <GITLAB_URL>
 
 #### 3.1 - Atualizar os pacotes do sistema
 
@@ -263,7 +265,8 @@ curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/scrip
 #### 3.4 - Instalação do GitLab no Ubuntu 22.04
 
 ```sh
-sudo EXTERNAL_URL="http://gitlab.linuxtechi.net" apt install gitlab-ce
+# Defina a URL externa do GitLab antes da instalação (ex.: https://gitlab.example.com)
+sudo EXTERNAL_URL="<GITLAB_EXTERNAL_URL>" apt install gitlab-ce
 ```
 
 A senha de usuário da interface web do GitLab é armazenada em "/etc/gitlab/initial_root_password".

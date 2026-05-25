@@ -66,8 +66,8 @@ module "ec2_jenkins" {
   
 }
 
-module "ec2_sonarquber" {
-  source     = "./modules/ec2_sonarquber"
+module "ec2_sonarqube" {
+  source     = "./modules/ec2_sonarqube"
   vpc_id     = module.new-vpc.vpc_id
   subnet_ids = module.new-vpc.subnet_ids
   key_name   = module.aws_key_pair.key_name

@@ -70,218 +70,105 @@ ssh -i <KEY_PAIR_FILE>.pem ubuntu@<SONARQUBE_PUBLIC_IP>
 sudo hostnamectl set-hostname sonarqube
 ```
 
-#### 2.2 - Aumentar o vm.max_map_count kernal, file descriptor e ulimit para a sessão atual em tempo de execução.
+# Jenkins pipeline com SonarQube e GitLab — Projeto de Portfólio
+
+Resumo executivo
+---------------
+Projeto demonstrando automação DevOps na AWS com infraestrutura provisionada por Terraform e integração CI/CD via Jenkins, análise de qualidade com SonarQube e repositório de código GitLab. O repositório foi reorganizado para ser apresentado como case profissional: documentação limpa, variáveis parametrizáveis, e validações básicas de IaC.
+
+Arquitetura (visão geral)
+------------------------
+- VPC com subnets públicas/privadas
+- Instâncias EC2 para: Jenkins, SonarQube, GitLab e um host Docker
+- Security Groups parametrizáveis (variável `allowed_cidrs`)
+- State remoto opcional em S3 (configurado em `main.tf`)
+
+Stack
+-----
+- Terraform (infraestrutura)
+- AWS (EC2, VPC, Security Groups, EIP)
+- Jenkins (CI server)
+- SonarQube (code quality)
+- GitLab (git hosting)
+
+O que este repositório contém
+-----------------------------
+- Código Terraform modular em `modules/` (EC2, VPC, key pair)
+- Scripts de provisionamento em `data/` (user-data)
+- Exemplo de variáveis: `terraform.tfvars.example`
+- Outputs padrão em `outputs.tf` e em cada módulo
+- Workflow GitHub Actions para `terraform fmt` / `validate` e `tflint` em `.github/workflows/terraform.yml`
+
+Como usar (resumido)
+--------------------
+1. Instalar Terraform 1.5.x e configurar AWS CLI/credenciais.
+2. Copiar e ajustar `terraform.tfvars.example` → `terraform.tfvars` com valores reais (sem expor chaves no repo).
+3. Inicializar e validar:
+
+```bash
+terraform init
+terraform fmt
+terraform validate
+```
+
+4. Para aplicar (ambiente de laboratório):
+
+```bash
+terraform apply -auto-approve
+```
+
+Observações importantes de segurança
+----------------------------------
+- Os valores `allowed_cidrs` em módulos defaultam para `["0.0.0.0/0"]` apenas para fins de laboratório. Antes de usar em produção, substitua por CIDRs restritos.
+- Não commit seus arquivos `*.tfvars` com credenciais ou chaves privadas.
+- Considere usar AWS Secrets Manager ou SSM Parameter Store para segredos.
+
+Variáveis e onboarding
+----------------------
+- Veja `variables.tf` na raiz e `terraform.tfvars.example` para os exemplos de configuração.
+- Principais variáveis:
+  - `key_name`: nome do key pair EC2 (obrigatório)
+  - `aws_region`: região AWS
+  - `allowed_cidrs`: lista de CIDRs permitidos (restringir para produção)
+
+Outputs úteis
+-------------
+- Os módulos expõem `instance_id`, `public_ip` e `security_group_id` para facilitar verificação após o `apply`.
+
+Qualidade e CI
+--------------
+- Adicionado workflow GitHub Actions: `.github/workflows/terraform.yml` — roda `terraform fmt -check`, `terraform init` e `terraform validate`, e `tflint`.
+- Recomenda-se integrar `pre-commit` para rodar `terraform fmt` localmente.
+
+Decisões e mudanças feitas (nota de manutenção)
+---------------------------------------------
+- Sanitização: removidos IPs públicos e credenciais do README (substituídos por placeholders).
+- Padronização: `key_name` agora é variável com `type = string` sem default em módulos EC2.
+- Segurança: adicionada variável `allowed_cidrs` para parametrizar regras de SG.
+- Correção: renomeado módulo `ec2_sonarqube` (corrigido typo de `ec2_sonarquber`).
+
+Evidências e imagens
+---------------------
+- Inclua screenshots em `img/` (ex.: `img/pipeline.webp`, `img/diagrama.webp`) e referencie aqui.
+
+Roadmap (sugestões rápidas)
+--------------------------
+- Automatizar validações em PRs (feito parcialmente com Actions).
+- Adicionar `pre-commit` + `tflint` configs.
+- Implementar outputs e exemplos de uso em `README` com resultados reais (após deploy).
+- Considerar HTTPS (ALB + cert) e DNS para melhorar apresentação do case.
+
+Contribuição
+------------
+Sinta-se à vontade para abrir PRs; para mudanças maiores crie uma branch com escopo claro (ex.: `improve/readme`) e inclua uma descrição concisa das alterações.
+
+Licença / Uso
+------------
+Este repositório é um projeto de estudo/portfólio. Não exponha credenciais privadas em commits públicos.
+
+---
+
+Se quiser, eu adapto esse README para uma versão em inglês ou crio uma seção "Try it" com comandos passo a passo mais detalhados.
+
 
 ```sh
-sysctl -w vm.max_map_count=524288
-sysctl -w fs.file-max=131072
-ulimit -n 131072
-ulimit -u 8192
-```
-
-#### 2.3 - Instalação do PostgreSQL
-
-```sh
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get -y install postgresql postgresql-contrib
-sudo netstat -tunlp | grep 5432
-sudo service postgresql96 initdb
-sudo systemctl start postgresql
-systemctl is-active postgresql
-sudo -u postgres psql
-```
-
-#### 2.4 - Instalação do Sonarqube
-
-#### 2.4.1 - Entrar na pasta temporária
-
-```sh
-cd /tmp
-```
-
-#### 2.4.2 - Baixar o Zip do SonarQube na pasta temporária
-
-```sh
-sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip
-```
-
-#### 2.4.3 - Instalar Unzip
-
-```sh
-sudo apt-get install unzip
-```
-
-#### 2.4.4 - Descompactar o arquivo de instalação para o diretório /opt
-
-```sh
-sudo unzip sonarqube-9.9.0.65466.zip -d /opt
-```
-
-#### 2.4.5 - Configurar SonarQube no Ubuntu 22.04 LTS
-
-#### 2.4.5.1 - Criar um grupo chamado sonar
-
-```sh
-sudo groupadd sonar
-```
-
-#### 2.4.5.2 - Adicionar o usuário com acesso ao diretório
-
-```sh
-sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar 
-sudo chown sonar:sonar /opt/sonarqube -R
-```
-
-### [Continuação...]
-
-#### 2.4.5.3 - Abrir o arquivo de configuração do SonarQube usando seu editor de texto favorito.
-
-```sh
-sudo nano /opt/sonarqube/conf/sonar.properties
-```
-
-```properties
-# Configurações do banco de dados PostgreSQL (substitua por segredos/variáveis)
-sonar.jdbc.username=<SONAR_DB_USER>
-sonar.jdbc.password=<SONAR_DB_PASSWORD>
-sonar.jdbc.url=jdbc:postgresql://localhost:5432/<SONAR_DB_NAME>
-```
-
-#### 2.4.5.4 - Editar o arquivo de script do Sonar e definir RUN_AS_USER
-
-```sh
-sudo nano /opt/sonarqube/bin/linux-x86-64/sonar.sh
-```
-
-```sh
-RUN_AS_USER=sonar
-```
-
-#### 2.4.5.5 - Iniciar o SonarQube
-
-```sh
-sudo su sonar
-cd /opt/sonarqube/bin/linux-x86-64/
-./sonar.sh start
-```
-
-#### 2.4.5.6 - Configurar o serviço systemd
-
-```sh
-sudo nano /etc/systemd/system/sonar.service
-```
-
-Adicione as seguintes linhas:
-
-```plaintext
-[Unit]
-Description=Serviço do SonarQube
-After=syslog.target network.target
-
-[Service]
-Type=forking
-
-ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
-ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
-
-User=sonar
-Group=sonar
-Restart=always
-
-LimitNOFILE=65536
-LimitNPROC=4096
-
-[Install]
-WantedBy=multi-user.target
-```
-
-#### 2.4.5.7 - Salvar e fechar o arquivo. Em seguida, pare o script do SonarQube que iniciamos manualmente e execute-o como um daemon.
-
-```sh
-sudo systemctl start sonar
-```
-
-#### 2.4.5.8 - Habilitar o serviço do SonarQube para iniciar automaticamente na inicialização do sistema.
-
-```sh
-sudo systemctl enable sonar
-```
-
-#### 2.4.5.9 - Verificar se o serviço do SonarQube está em execução.
-
-```sh
-sudo systemctl status sonar
-```
-
-### ERROS NA INSTALAÇÃO DO SONARQUBE
-
-- **Erro: Failed to create table schema_migrations**
-
-  Solução:
-  
-  ```sql
-  ALTER USER sonar SET search_path to sonarqube;
-  GRANT ALL ON SCHEMA sonarqube TO sonarqube;
-  GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonar; -- Não saia do shell psql
-  ```
-
-- **Erro: Cannot assign requested address**
-
-  Usuário e senha do PostgreSQL:
-  - Usuário: sonar
-  - Senha: sonar
-  - Porta: 3485
-
-------------------------------------------------------
-
-### 3. INSTALAÇÃO DO GITLAB NO UBUNTU 22.04
-
-- **GITLAB_URL**: <GITLAB_URL>
-
-#### 3.1 - Atualizar os pacotes do sistema
-
-```sh
-sudo apt update
-sudo apt upgrade -y
-sudo reboot
-```
-
-#### 3.2 - Instalar dependências do GitLab
-
-```sh
-sudo apt install -y curl openssh-server ca-certificates postfix
-```
-
-Durante a instalação do postfix, selecione "Site da Internet" e insira o nome do host do seu servidor como nome do servidor de e-mail.
-
-#### 3.3 - Adicionar o repositório do GitLab Apt
-
-```sh
-curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
-```
-
-#### 3.4 - Instalação do GitLab no Ubuntu 22.04
-
-```sh
-sudo EXTERNAL_URL="http://gitlab.linuxtechi.net" apt install gitlab-ce
-```
-
-A senha de usuário da interface web do GitLab é armazenada em "/etc/gitlab/initial_root_password".
-
-#### 3.5 - Liberar portas no firewall
-
-```sh
-sudo ufw allow http
-sudo ufw allow https
-```
-
-Após instalar e configurar o GitLab, abra seu navegador e acesse o endereço IP ou nome do host do seu servidor.
-
-Fontes:
-- [Computing for Geeks](https://computingforgeeks.com/how-to-install-gitlab-ce-on-ubuntu-linux/)
-- [FossLinux](https://www.fosslinux.com/24961/configuring-jenkins-pipeline-with-sonarqube-and-gitlab-integration.htm)
-- [GCore](https://gcore.com/learning/jenkins-pipeline-with-sonarqube-and-gitlab/)
-

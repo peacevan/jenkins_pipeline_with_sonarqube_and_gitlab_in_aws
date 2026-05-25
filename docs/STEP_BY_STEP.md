@@ -5,6 +5,10 @@ Aqui está o passo a passo enxuto e atualizado para instalação e configuraçã
 
 Guia prático para instalar Jenkins, SonarQube e GitLab em instâncias EC2 provisionadas via Terraform. Este documento foca em passos claros, idempotentes e checagens pós-instalação.
 
+Nota: este guia resume os passos para provisionamento e configuração; o tutorial completo, com explicações detalhadas e prints, está no Medium: https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
+
+Este repositório contém uma pipeline pensada para um projeto em Go (Golang). As etapas de build/test/scan no Jenkins contemplam comandos típicos de projetos Go (ex.: `go test`, `go vet`, `golangci-lint`).
+
 <p align="center">
 	<img src="../img/pipeline.webp" alt="Pipeline overview" width="700" />
 </p>
@@ -27,6 +31,7 @@ Guia prático para instalar Jenkins, SonarQube e GitLab em instâncias EC2 provi
 - Terraform 1.5.x instalado.
 - AWS CLI configurado (`aws configure`) ou credenciais por variável de ambiente.
 - Cliente SSH (`ssh`) disponível.
+ - Go toolchain instalado (Go 1.20+ recomendado) para compilar/testar o projeto exemplo.
 
 ## Placeholders comuns
 - `<KEY_PAIR_FILE>` — arquivo PEM local da key pair.
@@ -127,6 +132,16 @@ Após a instalação, verifique a página web `http://<GITLAB_PUBLIC_IP>` e regi
 - Verifique serviços: `sudo systemctl status jenkins sonar gitlab-runsvdir`.
 - Verifique portas: `ss -tunlp | grep -E ":8080|:9000|:80|:443"`.
 - Verifique logs: `/var/log/jenkins/`, `/opt/sonarqube/logs/`, `/var/log/gitlab/`.
+
+Se o repositório contiver a aplicação Go, faça também:
+
+```sh
+# executar testes unitários
+go test ./...
+
+# compilar binário de exemplo
+go build ./...
+```
 
 ## Troubleshooting comum
 - Jenkins não sobe: verifique `/var/lib/jenkins/secrets/initialAdminPassword` e logs em `/var/log/jenkins/jenkins.log`.

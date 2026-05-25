@@ -1,5 +1,5 @@
 # jenkins_pipeline_with_sonarqube_and_gitlab_in_aws
-Criação de um pipeline completo com Jenkins, SonarQube e GitLab na AWS usando Terraform.
+Criação de um pipeline completo com Jenkins, SonarQube e GitLab na AWS usando Terraform, pensado para um projeto em Go (Golang).
 
 <p align="center">
 	<img src="img/Copilot_20260524_205122.png" alt="Architecture diagram (Copilot)" width="800" />
@@ -22,6 +22,8 @@ Estrutura e documentação
 - `outputs.tf` — outputs principais
 - `.github/workflows/terraform.yml` — validações de IaC (fmt/validate/tflint)
 
+Nota: esta pipeline é voltada a um projeto em Go (Golang). O tutorial detalhado (com passos e prints) está disponível no Medium: https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
+
 Documentação detalhada (moved):
 - Plano de melhorias: [docs/PLANO_DE_MELHORIA.md](docs/PLANO_DE_MELHORIA.md)
 - Passo-a-passo e instalação: [docs/STEP_BY_STEP.md](docs/STEP_BY_STEP.md)
@@ -31,6 +33,7 @@ Documentação detalhada (moved):
 Quickstart
 ----------
 1. Instalar Terraform 1.5.x e configurar AWS CLI/credenciais.
+2. Instalar o toolchain Go (recomendado Go 1.20+), caso queira compilar/testar a aplicação exemplo.
 2. Copiar e ajustar `terraform.tfvars.example` → `terraform.tfvars` com valores reais (não comitar `*.tfvars`).
 3. Validar:
 

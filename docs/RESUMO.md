@@ -10,12 +10,16 @@
 
 Resumo curto do projeto: este repositório demonstra uma pipeline de CI/CD self-hosted usando Jenkins, GitLab e SonarQube provisionados em AWS (VPC, subnets, EC2). O objetivo é servir como referência para automação de infraestrutura com Terraform e exemplos de integração CI.
 
+Observação: a pipeline foi implementada para um projeto em Go (Golang). O tutorial detalhado com passos e prints está publicado no Medium: https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
+
 ## Arquitetura
 - Jenkins: servidor de integração contínua para orquestrar builds e pipelines.
 - GitLab: repositório Git self-hosted / runner (exemplo de integração).
 - SonarQube: análise estática de código e qualidade.
 - Rede: VPC pública/privada, Internet Gateway, rotas e security groups.
 - Provisionamento: módulos Terraform em `modules/` que criam KeyPair, VPC e instâncias EC2.
+
+- Projeto alvo: aplicação desenvolvida em Go (Golang). A pipeline automatiza build, testes unitários, lint e análise de qualidade (SonarQube).
 
 Veja o diagrama em `img/diagrama.webp` para uma visão rápida da topologia.
 
@@ -34,6 +38,10 @@ terraform fmt
 terraform init -input=false -backend=false
 terraform validate
 terraform plan -out=tfplan -input=false
+# Se o repositório contiver a aplicação Go, execute localmente:
+#
+# go test ./...
+# go build ./...
 # para aplicar: terraform apply tfplan
 ```
 

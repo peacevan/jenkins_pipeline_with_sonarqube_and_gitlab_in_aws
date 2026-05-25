@@ -1,59 +1,92 @@
 # jenkins_pipeline_with_sonarqube_and_gitlab_in_aws
-Criação de um pipeline completo com Jenkins, SonarQube e GitLab na AWS usando Terraform, pensado para um projeto em Go (Golang).
+Pipeline CI/CD para projetos em Go (Golang) com infraestrutura provisionada por Terraform na AWS — integração com Jenkins, SonarQube e GitLab.
 
 <p align="center">
 	<img src="img/Copilot_20260524_205122.png" alt="Architecture diagram (Copilot)" width="800" />
 </p>
 
 <p align="center">
-  <img src="img/pipeline.webp" alt="Pipeline overview" width="800" />
+	<img src="img/pipeline.webp" alt="Pipeline overview" width="800" />
 </p>
 
-Resumo
-------
-Projeto demonstrando automação DevOps na AWS com infraestrutura provisionada por Terraform e integração CI/CD via Jenkins, análise de qualidade com SonarQube e repositório de código GitLab.
+Resumo executivo / objetivo
+--------------------------
+Fornecer um repositório demonstrativo que combina Terraform para provisionamento em AWS e uma pipeline de CI/CD que valida, testa e analisa código de um projeto em Go, servindo como material para portfólio e referência técnica.
 
-Estrutura e documentação
+Arquitetura da solução
+----------------------
+A solução provisiona os componentes principais em AWS: uma VPC com subnets, instâncias EC2 para Jenkins, SonarQube e GitLab (opcional), security groups e um key pair para acesso seguro. O Jenkins orquestra o fluxo de build/test/scan; SonarQube realiza análise estática e o GitLab funciona como repositório/trigger.
+
+Stack utilizada
+---------------
+- Terraform
+- AWS (EC2, VPC, SG, KeyPair)
+- Jenkins
+- SonarQube
+- GitLab
+- Go (Golang)
+
+Recursos provisionados na AWS
+-----------------------------
+- VPC com subnets públicas/privadas
+- Internet Gateway e rotas
+- Security Groups (Jenkins, SonarQube, GitLab)
+- EC2 instances para cada serviço
+- Key Pair (módulo dedicado)
+- Outputs principais (IP, IDs) via `outputs.tf`
+
+Fluxo do pipeline CI/CD
+-----------------------
+1. Commit/push no repositório aciona o pipeline.
+2. Jenkins: checkout → `go build` → `go test` → `golangci-lint` → `sonar-scanner`.
+3. Em caso de sucesso, artefatos ou deploys são executados conforme configuração (opcional).
+
+Estrutura do repositório
 ------------------------
-- `modules/` — código Terraform modular (EC2, VPC, key pair)
-- `data/` — scripts de provisionamento (user-data)
-- `img/` — evidências e screenshots (opcional)
-- `terraform.tfvars.example` — exemplo de variáveis
-- `outputs.tf` — outputs principais
-- `.github/workflows/terraform.yml` — validações de IaC (fmt/validate/tflint)
+- `modules/` — módulos Terraform (ec2, vpc, key_pair, etc.)
+- `data/` — scripts de provisionamento e helpers
+- `docs/` — documentação e planos
+- `img/` — diagramas e evidências (screenshots)
+- `Jenkinsfile` — pipeline de exemplo
+- `terraform.tfvars.example` — modelo de variáveis
+- `.github/workflows/terraform.yml` — validações de IaC
 
-Nota: esta pipeline é voltada a um projeto em Go (Golang). O tutorial detalhado (com passos e prints) está disponível no Medium: https://medium.com/@peacevan/pipeline-ci-cd-com-terraform-aws-jenkins-sonarquber-gitlab-golang-c9f1b79ae379
-
-Documentação detalhada (moved):
-- Plano de melhorias: [docs/PLANO_DE_MELHORIA.md](docs/PLANO_DE_MELHORIA.md)
-- Passo-a-passo e instalação: [docs/STEP_BY_STEP.md](docs/STEP_BY_STEP.md)
-- Resumo rápido: [docs/RESUMO.md](docs/RESUMO.md)
-- Plano do pipeline: [docs/PIPELINE_PLAN.md](docs/PIPELINE_PLAN.md)
-
-Quickstart
-----------
-1. Instalar Terraform 1.5.x e configurar AWS CLI/credenciais.
-2. Instalar o toolchain Go (recomendado Go 1.20+), caso queira compilar/testar a aplicação exemplo.
-2. Copiar e ajustar `terraform.tfvars.example` → `terraform.tfvars` com valores reais (não comitar `*.tfvars`).
-3. Validar:
+Como executar
+-------------
+1. Copie e edite variáveis:
 
 ```bash
-terraform init
-terraform fmt
-terraform validate
+cp terraform.tfvars.example terraform.tfvars
+# edite terraform.tfvars com valores (subnets, ami_id, key_name, allowed_cidrs)
 ```
 
-Segurança
---------
-- `allowed_cidrs` defaulta para `["0.0.0.0/0"]` apenas para laboratório. Ajuste antes de produção.
-- Não exponha chaves ou credenciais em commits públicos.
+2. Valide e gere plano:
 
-Próximos passos sugeridos
+```bash
+terraform fmt
+terraform init -input=false -backend=false
+terraform validate
+terraform plan -out=tfplan -input=false
+```
+
+3. Aplique quando pronto:
+
+```bash
+terraform apply tfplan
+```
+
+Melhorias futuras
+-----------------
+- Finalizar ou refatorar o módulo GitLab.
+- Adicionar `LICENSE` e `CONTRIBUTING.md`.
+- Reforçar segurança (reduzir `allowed_cidrs`, políticas de IAM).
+- Adicionar pre-commit hooks e segurança adicional (Checkov, tflint).
+- Incluir mais evidências visuais e instruções detalhadas de build para Go.
+
+Screenshots / evidências
 ------------------------
-- Executar `terraform fmt` + `terraform validate` em CI (já adicionado) e localmente.
-- Adicionar diagrama em `img/` e evidências de pipeline.
-- Revisar `allowed_cidrs` e mover segredos para SSM/Secrets Manager.
+Imagens e diagramas estão em `img/` e são referenciadas em `docs/STEP_BY_STEP.md`.
 
 Contribuição
 ------------
-Abra PRs na branch `main` a partir de `improve/*` para mudanças maiores. Use o arquivo `pr_body.md` como modelo para PRs.
+Abra PRs a partir de branches `improve/*` para sugestões e melhorias. Use `pr_body.md` como modelo para PRs.

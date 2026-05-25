@@ -2,6 +2,20 @@
 
 Este documento descreve o plano de implementação do pipeline CI/CD integrado com Jenkins, SonarQube, GitLab e Docker, e a infraestrutura provisionada via Terraform na AWS. O conteúdo foi normalizado a partir do arquivo original de planejamento.
 
+## Sumário
+
+- [Visão Geral](#visao-geral)
+- [Passos Principais](#passos-principais)
+	- [Passo 1 — Configuração do Ambiente AWS com Terraform](#passo-1-configuracao-do-ambiente-aws-com-terraform)
+	- [Passo 2 — Configuração do Repositório (GitLab)](#passo-2-configuracao-do-repositorio-gitlab)
+	- [Passo 3 — Configuração do Jenkins](#passo-3-configuracao-do-jenkins)
+	- [Passo 4 — Configuração do SonarQube](#passo-4-configuracao-do-sonarqube)
+	- [Passo 5 — Build e Deploy com Docker](#passo-5-build-e-deploy-com-docker)
+	- [Passo 6 — Automatização e Monitoramento](#passo-6-automatizacao-e-monitoramento)
+- [Considerações de Segurança e Operação](#consideracoes-de-seguranca-e-operacao)
+- [Resultado Esperado](#resultado-esperado)
+- [Próximos Passos Sugeridos](#proximos-passos-sugeridos)
+
 ## Visão Geral
 O pipeline automatiza: build, testes, análise estática (SonarQube), construção de imagem Docker e deploy em instâncias EC2 provisionadas pelo Terraform. A integração pode ser feita via GitLab (webhooks) ou acionada diretamente no Jenkins.
 

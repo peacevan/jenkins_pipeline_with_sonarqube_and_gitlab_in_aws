@@ -398,3 +398,7 @@ Ao concluir essas melhorias, o repositório poderá ser apresentado como um proj
 Este repositório já tem uma base técnica interessante. O principal trabalho agora não é apenas “fazer funcionar”, mas sim **refinar, organizar, proteger e apresentar melhor**.
 
 Com essas melhorias, o projeto terá mais valor como prova pública de competência técnica e poderá ser usado com muito mais força no LinkedIn, GitHub e em processos seletivos.
+
+--
+
+Veja o arquivo original na raiz antes da reorganização para histórico. Este documento descreve o plano de melhorias sugerido para transformar o repositório em um case de portfólio profissional. Mantido em `docs/` para organização e navegação.

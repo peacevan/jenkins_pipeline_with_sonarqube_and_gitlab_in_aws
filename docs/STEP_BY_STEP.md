@@ -3,6 +3,11 @@ Aqui está o passo a passo detalhado para instalação e configuração (movido 
 
 ## Resumo
 
+## Sumário
+- [Instalação do Jenkins](#instalacao-do-jenkins)
+- [Instalação do SonarQube](#instalacao-do-sonarqube)
+- [Instalação do GitLab](#instalacao-do-gitlab)
+
 ### Instalação do Jenkins
 
 - **JENKINS_URL**: <JENKINS_URL>
@@ -62,6 +67,8 @@ Coloque a URL da tela do Jenkins aqui
 
 
 ### Instalação do SonarQube
+
+#### Pré-requisitos
 
 Coloque os pré-requisitos aqui
 

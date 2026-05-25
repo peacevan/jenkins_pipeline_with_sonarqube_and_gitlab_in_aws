@@ -18,6 +18,7 @@ Documentação detalhada (moved):
 - Plano de melhorias: [docs/PLANO_DE_MELHORIA.md](docs/PLANO_DE_MELHORIA.md)
 - Passo-a-passo e instalação: [docs/STEP_BY_STEP.md](docs/STEP_BY_STEP.md)
 - Resumo rápido: [docs/RESUMO.md](docs/RESUMO.md)
+- Plano do pipeline: [docs/PIPELINE_PLAN.md](docs/PIPELINE_PLAN.md)
 
 Quickstart
 ----------

@@ -1,5 +1,24 @@
 # Plano de Melhoria
 
+## Sumário
+- [Objetivo](#objetivo)
+- [Reposicionamento do Projeto para Portfólio](#reposicionamento-do-projeto-para-portf%C3%B3lio)
+- [Reescrever o README de Forma Profissional](#reescrever-o-readme-de-forma-profissional)
+- [Remover Dados Sensíveis e Informações de Ambiente Real](#remover-dados-sens%C3%ADveis-e-informa%C3%A7%C3%B5es-de-ambiente-real)
+- [Fortalecer Práticas de Segurança](#fortalecer-pr%C3%A1ticas-de-seguran%C3%A7a)
+- [Parametrizar Melhor o Terraform](#parametrizar-melhor-o-terraform)
+- [Padronizar Nomenclatura e Corrigir Inconsistências](#padronizar-nomenclatura-e-corrigir-inconsist%C3%AAncias)
+- [Limpar Código Comentado e Trechos Inacabados](#limpar-c%C3%B3digo-comentado-e-trechos-inacabados)
+- [Finalizar ou Reestruturar o Módulo GitLab](#finalizar-ou-reestruturar-o-m%C3%B3dulo-gitlab)
+- [Criar outputs.tf e Melhorar Experiência de Uso](#criar-outputstf-e-melhorar-experi%C3%AAncia-de-uso)
+- [Adicionar terraform.tfvars.example](#adicionar-terraformtfvarsexample)
+- [Organizar Estrutura dos Arquivos Terraform](#organizar-estrutura-dos-arquivos-terraform)
+- [Validar e Padronizar Qualidade do Código Terraform](#validar-e-padronizar-qualidade-do-c%C3%B3digo-terraform)
+- [Melhorar Evidências Visuais do Projeto](#melhorar-evid%C3%AAncias-visuais-do-projeto)
+- [Criar Narrativa de Impacto para LinkedIn](#criar-narrativa-de-impacto-para-linkedin)
+- [Plano de Execução por Fases](#plano-de-execu%C3%A7%C3%A3o-por-fases)
+- [Conclusão](#conclus%C3%A3o)
+
 ## Objetivo
 Transformar este repositório de um projeto com perfil de laboratório/estudo em um **case de portfólio profissional** para destacar competências em **DevOps, CI/CD, Infraestrutura como Código e AWS** no LinkedIn.
 

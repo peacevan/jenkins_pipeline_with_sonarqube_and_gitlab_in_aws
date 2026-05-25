@@ -1,13 +1,13 @@
-# Plano de Melhoria do Repositório
+# Plano de Melhoria
 
 ## Objetivo
 Transformar este repositório de um projeto com perfil de laboratório/estudo em um **case de portfólio profissional** para destacar competências em **DevOps, CI/CD, Infraestrutura como Código e AWS** no LinkedIn.
 
 ---
 
-## 1. Reposicionamento do projeto para portfólio
+## Reposicionamento do Projeto para Portfólio
 
-### Situação atual
+### Situação Atual
 O repositório já demonstra conhecimento prático em:
 - Terraform
 - AWS
@@ -26,15 +26,15 @@ Reposicionar o projeto como:
 
 ---
 
-## 2. Reescrever o README de forma profissional
+## Reescrever o README de Forma Profissional
 
-### Problemas identificados
+### Problemas Identificados
 - README muito operacional e pouco executivo
 - presença de placeholders como “coloque o IP aqui”
 - foco excessivo em comandos manuais
 - pouca ênfase em arquitetura, objetivos e resultados
 
-### Melhorias propostas
+### Melhorias Propostas
 Criar um README com a seguinte estrutura:
 
 1. **Título do projeto**
@@ -49,20 +49,20 @@ Criar um README com a seguinte estrutura:
 10. **Screenshots / evidências**
 11. **Resultados obtidos**
 
-### Resultado esperado
+### Resultado Esperado
 Melhorar a leitura para recrutadores, gestores técnicos e profissionais de tecnologia que acessarem o projeto.
 
 ---
 
-## 3. Remover dados sensíveis e informações de ambiente real
+## Remover Dados Sensíveis e Informações de Ambiente Real
 
-### Problemas identificados
+### Problemas Identificados
 - exposição de IPs públicos reais no README
 - comandos de acesso SSH apontando para ambiente real
 - nomes específicos de infraestrutura que podem estar ligados ao ambiente pessoal
 - exemplos com credenciais fixas
 
-### Melhorias propostas
+### Melhorias Propostas
 Remover ou substituir por placeholders:
 - `<JENKINS_PUBLIC_IP>`
 - `<SONARQUBE_URL>`
@@ -76,7 +76,7 @@ Também remover do material público:
 - nomes de buckets de uso pessoal, quando aplicável
 - exemplos de usuário/senha reais ou inseguros
 
-### Resultado esperado
+### Resultado Esperado
 Projeto com aparência mais profissional, segura e reutilizável.
 
 ---
